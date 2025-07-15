@@ -171,13 +171,6 @@ const ProductCard: FC<ProductCardProps> = ({
           </div>
           <div className="flex justify-between items-end">
             <Prices price={product?.salePrice || product?.price} />
-            <div className="flex items-center mb-0.5">
-              <StarIcon className="w-5 h-5 text-amber-400" />
-              <span className="text-sm ml-1 text-slate-500">
-                {product?.reviews?.reduce((acc, review) => acc + review.star, 0) /
-                  (product?.reviews?.length || 1)} ({product?.reviews?.length ?? 0} reviews)
-              </span>
-            </div>
           </div>
         </div>
       </div>

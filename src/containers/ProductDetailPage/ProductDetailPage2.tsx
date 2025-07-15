@@ -6,17 +6,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router";
 import NcInputNumber from "../../components/NcInputNumber";
 import Prices from "../../components/Prices";
-import ReviewItem from "../../components/ReviewItem";
 import { addCartItem } from "../../features/cart/cartSlice";
 import { fetchProductDetail } from "../../features/product/productSlice";
 import ButtonPrimary from "../../shared/Button/ButtonPrimary";
-import ButtonSecondary from "../../shared/Button/ButtonSecondary";
 import NcImage from "../../shared/NcImage/NcImage";
 import { AppDispatch, RootState } from "../../store";
 import formatCurrencyVND from "../../utils/formatMoney";
 import AccordionInfo from "./AccordionInfo";
 import ModalPhotos from "./ModalPhotos";
-import ModalViewAllReviews from "./ModalViewAllReviews";
 
 export interface ProductDetailPage2Props {
   className?: string;
@@ -60,8 +57,6 @@ const ProductDetailPage2: FC<ProductDetailPage2Props> = ({
 
   const [qualitySelected, setQualitySelected] = useState(1);
   const [isOpen, setIsOpen] = useState(false);
-  const [isOpenModalViewAllReviews, setIsOpenModalViewAllReviews] =
-    useState(false);
   const [openFocusIndex, setOpenFocusIndex] = useState(0);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
@@ -280,13 +275,6 @@ const ProductDetailPage2: FC<ProductDetailPage2Props> = ({
   };
 
   const renderSectionSidebar = () => {
-    const reviewsCount = product?.reviews?.length || 0;
-    const averageRating =
-      reviewsCount > 0
-        ? product.reviews.reduce((acc, review) => acc + review.star, 0) /
-        reviewsCount
-        : 0;
-
     return (
       <div className="listingSectionSidebar__wrap lg:shadow-lg">
         <div className="space-y-7 lg:space-y-8">
@@ -294,19 +282,6 @@ const ProductDetailPage2: FC<ProductDetailPage2Props> = ({
             <div className="flex text-2xl font-semibold">
               {formatCurrencyVND(product.salePrice || product.price)}
             </div>
-            <a
-              href="#reviews"
-              className="flex items-center text-sm font-medium"
-            >
-              <StarIcon className="w-5 h-5 pb-[1px] text-orange-400" />
-              <span className="ml-1.5 flex">
-                <span>{averageRating.toFixed(1)}</span>
-
-                <span className="mx-1.5">·</span>
-                <span className="text-slate-700 dark:text-slate-400 underline">{`${product?.reviews?.length || 0
-                  } đánh giá`}</span>
-              </span>
-            </a>
           </div>
 
           {/* Product Attributes Section */}
@@ -410,20 +385,6 @@ const ProductDetailPage2: FC<ProductDetailPage2Props> = ({
         <div>
           <h2 className="text-2xl md:text-3xl font-semibold">{product.name}</h2>
           <div className="flex items-center mt-4 sm:mt-5">
-            <a
-              href="#reviews"
-              className="hidden sm:flex items-center text-sm font-medium"
-            >
-              <StarIcon className="w-5 h-5 pb-[1px] text-slate-800 dark:text-slate-200" />
-              <span className="ml-1.5">
-                <span>{averageRating.toFixed(1)}</span>
-
-                <span className="mx-1.5">·</span>
-                <span className="text-slate-700 dark:text-slate-400 underline">
-                  {`${product?.reviews?.length || 0} đánh giá`}
-                </span>
-              </span>
-            </a>
             <span className="hidden sm:block mx-2.5">·</span>
             {product.brand && (
               <span className="text-slate-700 dark:text-slate-400">
@@ -462,33 +423,6 @@ const ProductDetailPage2: FC<ProductDetailPage2Props> = ({
             },
           ]}
         />
-      </div>
-    );
-  };
-
-  const renderReviews = () => {
-    return (
-      <div id="reviews" className="scroll-mt-[150px]">
-        <h2 className="text-2xl font-semibold flex items-center">
-          <StarIcon className="w-7 h-7 mb-0.5" />
-          <span className="ml-1.5">
-            {" "}
-            {`${product?.reviews?.length ?? 0} đánh giá`}
-          </span>
-        </h2>
-        <div className="mt-10">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-y-11 gap-x-28">
-            {product.reviews.map((review, index) => (
-              <ReviewItem key={index} data={review} />
-            ))}
-          </div>
-          <ButtonSecondary
-            onClick={() => setIsOpenModalViewAllReviews(true)}
-            className="mt-10 border border-slate-300 dark:border-slate-700"
-          >
-            Xem tất cả {product?.reviews?.length ?? 0} reviews
-          </ButtonSecondary>
-        </div>
       </div>
     );
   };
@@ -585,16 +519,6 @@ const ProductDetailPage2: FC<ProductDetailPage2Props> = ({
           </div>
         </div>
       </main>
-      <div className="container pb-24 lg:pb-28 pt-14 space-y-14">
-        <hr className="border-slate-200 dark:border-slate-700" />
-        {renderReviews()}
-        <hr className="border-slate-200 dark:border-slate-700" />
-      </div>
-      <ModalViewAllReviews
-        show={isOpenModalViewAllReviews}
-        onCloseModalViewAllReviews={() => setIsOpenModalViewAllReviews(false)}
-        review={product.reviews}
-      />
     </div>
   );
 };

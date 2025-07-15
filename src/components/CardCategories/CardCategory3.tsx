@@ -39,7 +39,7 @@ const CardCategory3: FC<CardCategory3Props> = ({
         <div>
           <div className="absolute inset-5 sm:inset-8 flex flex-col">
             <div className="max-w-xs">
-              <span className={`block mb-2 text-sm text-slate-700`}>
+              <span className={`block mb-2 text-2xl font-bold text-slate-1000`}>
                 {name}
               </span>
             </div>
@@ -49,7 +49,7 @@ const CardCategory3: FC<CardCategory3Props> = ({
                 fontSize="text-sm font-medium"
                 className="nc-shadow-lg"
               >
-                Show me all
+                Xem tất cả
               </ButtonSecondary>
             </div>
           </div>

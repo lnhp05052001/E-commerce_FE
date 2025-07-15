@@ -1,9 +1,9 @@
 import Glide from "@glidejs/glide";
 import { useEffect, useId } from "react";
 import img1 from "./../images/collections/1.png";
-import img4 from "./../images/collections/3.png";
-import img3 from "./../images/collections/4.png";
-import img2 from "./../images/collections/5.png";
+import img2 from "./../images/collections/2.png";
+import img3 from "./../images/collections/3.png";
+import img4 from "./../images/collections/4.png";
 import CardCategory3, {
   CardCategory3Props,
 } from "./CardCategories/CardCategory3";
@@ -13,22 +13,22 @@ export const CATS_DISCOVER: CardCategory3Props[] = [
   {
     name: "NIKE",
     featuredImage: img1,
-    color: "bg-yellow-50",
+    color: "bg-green-50",
   },
   {
     name: "LEVI'S",
     featuredImage: img2,
-    color: "bg-red-50",
+    color: "bg-white",
   },
   {
     name: "H&M",
     featuredImage: img3,
-    color: "bg-blue-50",
+    color: "bg-red-50",
   },
   {
     name: "MANGO",
     featuredImage: img4,
-    color: "bg-green-50",
+    color: "bg-yellow-50",
   },
 ];
 
@@ -40,7 +40,7 @@ const DiscoverMoreSlider = () => {
     // @ts-ignore
     const OPTIONS: Glide.Options = {
       perView: 2.8,
-      gap: 32,
+      gap: 20,
       bound: true,
       breakpoints: {
         1280: {

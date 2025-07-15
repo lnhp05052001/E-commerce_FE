@@ -73,7 +73,7 @@ const ModalPhotos: FC<ModalPhotosProps> = ({
                 <NcImage
                   src={item}
                   containerClassName=" w-full h-full flex items-center justify-center "
-                  className=" max-w-full max-h-full rounded-2xl"
+                  className="max-w-full max-h-full rounded-2xl"
                 />
               </li>
             ))}

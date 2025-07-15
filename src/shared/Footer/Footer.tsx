@@ -1,8 +1,5 @@
 import React from "react";
 import { CustomLink } from "../../data/types";
-import Logo from "../../shared/Logo/Logo";
-import SocialsList1 from "../../shared/SocialsList1/SocialsList1";
-
 export interface WidgetFooterMenu {
   id: string;
   title: string;
@@ -11,7 +8,7 @@ export interface WidgetFooterMenu {
 
 const widgetMenus: WidgetFooterMenu[] = [
   {
-    id: "5",
+    id: "1",
     title: "Bắt đầu",
     menus: [
       { href: "#", label: "Ghi chú phát hành" },
@@ -21,7 +18,7 @@ const widgetMenus: WidgetFooterMenu[] = [
     ],
   },
   {
-    id: "1",
+    id: "2",
     title: "Khám phá",
     menus: [
       { href: "#", label: "Tạo mẫu" },
@@ -31,7 +28,7 @@ const widgetMenus: WidgetFooterMenu[] = [
     ],
   },
   {
-    id: "2",
+    id: "3",
     title: "Tài nguyên",
     menus: [
       { href: "#", label: "Thực hành tốt nhất" },
@@ -59,7 +56,7 @@ const Footer: React.FC = () => {
         <h2 className="font-semibold text-neutral-700 dark:text-neutral-200">
           {menu.title}
         </h2>
-        <ul className="mt-5 space-y-4">
+        <ul className="mt-5 space-y-3">
           {menu.menus.map((item, index) => (
             <li key={index}>
               <a
@@ -79,16 +76,8 @@ const Footer: React.FC = () => {
   };
 
   return (
-    <div className="nc-Footer relative py-20 lg:pt-28 lg:pb-24 border-t border-neutral-200 dark:border-neutral-700">
-      <div className="container grid grid-cols-2 gap-y-10 gap-x-5 sm:gap-x-8 md:grid-cols-4 lg:grid-cols-5 lg:gap-x-10 ">
-        <div className="grid grid-cols-4 gap-5 col-span-2 md:col-span-4 lg:md:col-span-1 lg:flex lg:flex-col">
-          <div className="col-span-2 md:col-span-1">
-            <Logo />
-          </div>
-          <div className="col-span-2 flex items-center md:col-span-3">
-            <SocialsList1 className="flex items-center space-x-2 lg:space-x-0 lg:flex-col lg:space-y-3 lg:items-start" />
-          </div>
-        </div>
+    <div className="nc-Footer relative py-20 lg:pt-24 lg:pb-24 border-t border-neutral-200 dark:border-neutral-700">
+      <div className="container grid grid-cols-2 gap-y-10 gap-x-5 sm:gap-x-8 md:grid-cols-4 lg:grid-cols-4 lg:gap-x-10 ">
         {widgetMenus.map(renderWidgetMenuItem)}
       </div>
     </div>

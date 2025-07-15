@@ -10,32 +10,28 @@ import department4Png from "../../images/collections/department4.png";
 
 export interface CardCategoryData {
   name: string;
-  desc: string;
+  desc?: string;
   img: string;
   color?: string;
 }
 const CATS: CardCategoryData[] = [
   {
     name: "Áo",
-    desc: "20+ categories",
     img: department1Png,
     color: "bg-indigo-100",
   },
   {
     name: "Quần",
-    desc: "10+ categories",
     img: department2Png,
     color: "bg-slate-100",
   },
   {
     name: "Áo Khoác",
-    desc: "34+ categories",
     img: department3Png,
     color: "bg-sky-100",
   },
   {
     name: "Giày",
-    desc: "12+ categories",
     img: department4Png,
     color: "bg-orange-100",
   },

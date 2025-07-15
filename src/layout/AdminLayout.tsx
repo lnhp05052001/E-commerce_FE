@@ -61,15 +61,6 @@ const generateNavigation = (role: string): MenuItem[] => {
         { name: 'List Orders', href: '/admin/orders', icon: List },
       ],
     },
-    {
-      name: 'Blog', href: '/admin/blog', icon: Edit,
-      children: [
-        { name: 'List Blogs', href: '/admin/blog', icon: List },
-        { name: 'Add Blog', href: '/admin/blog/add', icon: Edit },
-        { name: 'Categories', href: '/admin/blog-categories', icon: List },
-        { name: 'Add Category', href: '/admin/blog-categories/add', icon: Edit },
-      ],
-    },
     { name: 'Contact', href: '/admin/contact', icon: Phone },
     { name: 'Users', href: '/admin/users', icon: Users, roles: ['ADMIN'] }
   ];
