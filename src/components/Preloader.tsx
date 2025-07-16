@@ -10,7 +10,6 @@ const Preloader = () => {
                      <div>
                         <div className="preloader">
                            <span></span>
-                           <span></span>
                         </div>
                      </div>
                   </div>
