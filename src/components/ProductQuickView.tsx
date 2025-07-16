@@ -166,15 +166,15 @@ const ProductQuickView: FC<ProductQuickViewProps> = ({ className = "", product }
           data={[
             {
               name: "Description",
-              content: product?.description,
+              content: product?.description || "Không có mô tả",
             },
             {
-              name: "Ingredients",
-              content: product?.ingredients,
+              name: "Material",
+              content: product?.material || "Không có thông tin chất liệu",
             },
             {
-              name: "Usage",
-              content: product?.productUsage,
+              name: "Style",
+              content: product?.style || "Không có thông tin phong cách",
             },
           ]}
         />
