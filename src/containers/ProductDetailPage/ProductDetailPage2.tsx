@@ -374,12 +374,6 @@ const ProductDetailPage2: FC<ProductDetailPage2Props> = ({
   };
 
   const renderSection1 = () => {
-    const reviewsCount = product?.reviews?.length || 0;
-    const averageRating =
-      reviewsCount > 0
-        ? product.reviews.reduce((acc, review) => acc + review.star, 0) /
-        reviewsCount
-        : 0;
     return (
       <div className="listingSection__wrap !space-y-6">
         <div>
@@ -403,24 +397,7 @@ const ProductDetailPage2: FC<ProductDetailPage2Props> = ({
             {
               name: "Chất liệu",
               content: product?.material??"",
-            },
-            {
-              name: "Thông tin bổ sung",
-              content: `
-                ${product.material ? `Chất liệu:${product.material}` : ''}
-                ${product.gender ? `Giới tính:${product.gender}</p>` : ''}
-                ${product.style ? `<p><strong>Phong cách:</strong> ${product.style}</p>` : ''}
-                ${product.season ? `<p><strong>Mùa:</strong> ${product.season}</p>` : ''}
-                ${product.sizes?.length ? `<p><strong>Kích thước có sẵn:</strong> ${product.sizes.map(sizeId => {
-                const size = PRODUCT_SIZES.find(s => s.id === sizeId);
-                return size?.name || sizeId;
-              }).join(', ')}</p>` : ''}
-                ${product.colors?.length ? `<p><strong>Màu sắc có sẵn:</strong> ${product.colors.map(colorId => {
-                const color = PRODUCT_COLORS.find(c => c.id === colorId);
-                return color?.name || colorId;
-              }).join(', ')}</p>` : ''}
-              `,
-            },
+            }
           ]}
         />
       </div>
@@ -514,7 +491,7 @@ const ProductDetailPage2: FC<ProductDetailPage2Props> = ({
           {renderSection1()}
         </div>
         <div className="flex-grow">
-          <div className="hidden lg:block sticky top-28">
+          <div className="hidden lg:block sticky top-28 ">
             {renderSectionSidebar()}
           </div>
         </div>
