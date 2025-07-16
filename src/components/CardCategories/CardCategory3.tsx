@@ -18,9 +18,15 @@ const CardCategory3: FC<CardCategory3Props> = ({
   name = CATS_DISCOVER[2].name,
   color = CATS_DISCOVER[2].color,
 }) => {
+  // Tạo URL với brand filter
+  const getLinkUrl = () => {
+    const brandName = name?.toLowerCase();
+    return `/cua-hang?brand=${encodeURIComponent(brandName || '')}`;
+  };
+
   return (
     <Link
-      to={"/page-collection"}
+      to={getLinkUrl()}
       className={`nc-CardCategory3 block ${className}`}
       data-nc-id="CardCategory3"
     >

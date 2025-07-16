@@ -19,9 +19,15 @@ const CardCategory2: FC<CardCategory2Props> = ({
   name,
   desc,
 }) => {
+  // Tạo URL với category filter
+  const getLinkUrl = () => {
+    const categoryName = name?.toLowerCase();
+    return `/cua-hang?category=${encodeURIComponent(categoryName || '')}`;
+  };
+
   return (
     <Link
-      to={"/page-collection"}
+      to={getLinkUrl()}
       className={`nc-CardCategory2 ${className}`}
       data-nc-id="CardCategory2"
     >

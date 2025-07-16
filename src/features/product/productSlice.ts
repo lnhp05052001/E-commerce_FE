@@ -376,6 +376,10 @@ const productSlice = createSlice({
     setFilters: (state, action: PayloadAction<Partial<FilterParams>>) => {
       state.filters = { ...state.filters, ...action.payload };
     },
+    clearProducts: (state) => {
+      state.products = [];
+      state.pagination = null;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -569,6 +573,6 @@ const productSlice = createSlice({
   },
 });
 
-export const { setFilters } = productSlice.actions;
+export const { setFilters, clearProducts } = productSlice.actions;
 
 export default productSlice.reducer;
