@@ -4,7 +4,8 @@ import { useDispatch } from "react-redux";
 import api from "../api/api";
 import { clearCartNew } from "../features/cart/cartSlice";
 import { AppDispatch } from "../store";
-import { AuthResponse, LoginCredentials, PasswordData, User, UserResponse } from "../types";
+import { AuthResponse, LoginCredentials, User, UserResponse } from "../types";
+import { PasswordData } from "../types/password.types";
 import { uploadImage } from "../utils/uploadImage";
 
 export interface AuthContextType {
@@ -170,7 +171,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       return response.data;
     } catch (error: any) {
       console.error("Change password failed", error);
-      throw error;
+      // Throw the error message for better error handling
+      const errorMessage = error.response?.data?.message || error.message || "Đổi mật khẩu thất bại";
+      throw errorMessage;
     }
   };
   const toggleSideMenu = () => {

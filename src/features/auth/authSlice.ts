@@ -133,17 +133,20 @@ export const changePassword = createAsyncThunk<
   "auth/changePassword",
   async ({ currentPassword, newPassword }, { rejectWithValue }) => {
     try {
-      await api.post(`/api/user/change-password`, {
+      const response = await api.post(`/api/user/change-password`, {
         oldPassword: currentPassword,
         newPassword: newPassword,
       });
+      
+      return response.data;
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>;
-      return rejectWithValue(
-        axiosError.response?.data.message ||
-          axiosError.message ||
-          "An error occurred"
-      );
+      const errorMessage = axiosError.response?.data?.message || 
+                          axiosError.message || 
+                          "Đổi mật khẩu thất bại";
+      
+      console.error("Change password error:", errorMessage);
+      return rejectWithValue(errorMessage);
     }
   }
 );
