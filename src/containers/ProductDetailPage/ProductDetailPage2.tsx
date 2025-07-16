@@ -1,5 +1,4 @@
 import { Transition } from "@headlessui/react";
-import { StarIcon } from "@heroicons/react/24/solid";
 import { FC, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
@@ -19,16 +18,13 @@ export interface ProductDetailPage2Props {
   className?: string;
 }
 const PRODUCT_COLORS = [
-  { id: "red", name: "Đỏ", hex: "#FF0000" },
-  { id: "green", name: "Xanh lá", hex: "#00FF00" },
-  { id: "blue", name: "Xanh dương", hex: "#0000FF" },
   { id: "black", name: "Đen", hex: "#000000" },
   { id: "white", name: "Trắng", hex: "#FFFFFF" },
-  { id: "pink", name: "Hồng", hex: "#FFC0CB" },
-  { id: "yellow", name: "Vàng", hex: "#FFFF00" },
-  { id: "orange", name: "Cam", hex: "#FFA500" },
-  { id: "purple", name: "Tím", hex: "#800080" },
-  { id: "gray", name: "Xám", hex: "#808080" },
+  { id: "grey", name: "Xám", hex: "#808080" },
+  { id: "navy", name: "Xanh navy", hex: "#000080" },
+  { id: "olive", name: "Xanh rêu", hex: "#808000" },
+  { id: "denim", name: "Xanh denim", hex: "#1560BD" },
+  { id: "beige", name: "Be", hex: "#F5F5DC" }
 ];
 
 const PRODUCT_SIZES = [

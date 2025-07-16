@@ -11,6 +11,16 @@ import ButtonPrimary from "../shared/Button/ButtonPrimary";
 import { AppDispatch } from "../store";
 import { Product } from "../types";
 
+const PRODUCT_COLORS = [
+  { id: "black", name: "Đen", hex: "#000000" },
+  { id: "white", name: "Trắng", hex: "#FFFFFF" },
+  { id: "grey", name: "Xám", hex: "#808080" },
+  { id: "navy", name: "Xanh navy", hex: "#000080" },
+  { id: "olive", name: "Xanh rêu", hex: "#808000" },
+  { id: "denim", name: "Xanh denim", hex: "#1560BD" },
+  { id: "beige", name: "Be", hex: "#F5F5DC" }
+];
+
 export interface ProductQuickViewProps {
   className?: string;
   product: Product;
@@ -91,7 +101,6 @@ const ProductQuickView: FC<ProductQuickViewProps> = ({ className = "", product }
 
         {/* ---------- 2 DESCRIPTION AND STOCK ---------- */}
         <div>
-          <p className="text-slate-600 dark:text-slate-300">{product?.description}</p>
           <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
             Stock: <span className="font-semibold">{product?.stock}</span>
           </p>
@@ -100,20 +109,26 @@ const ProductQuickView: FC<ProductQuickViewProps> = ({ className = "", product }
         {/* Size selector */}
         {product.sizes && product.sizes.length > 0 && (
           <div className="mt-4">
-            <label className="text-sm font-medium text-slate-900 dark:text-slate-200">Size:</label>
-            <div className="flex flex-wrap gap-2 mt-2">
+            <label className="text-sm font-medium text-slate-900 dark:text-slate-200">
+              Size:
+              <span className="ml-1 text-slate-500 dark:text-slate-400">
+                {selectedSize || "Vui lòng chọn"}
+              </span>
+            </label>
+            <div className="grid grid-cols-4 sm:grid-cols-5 gap-2 mt-3">
               {product.sizes.map((size, index) => (
-                <button
+                <div
                   key={index}
-                  className={`px-3 py-1 text-xs rounded-full border ${
-                    selectedSize === size
-                      ? 'bg-slate-900 text-white border-slate-900 dark:bg-slate-100 dark:text-slate-900 dark:border-slate-100'
-                      : 'border-slate-300 dark:border-slate-700 hover:border-slate-900 dark:hover:border-slate-300'
-                  }`}
+                  className={`relative h-9 rounded-2xl border flex items-center justify-center 
+                    cursor-pointer select-none transition-all px-3 uppercase font-semibold tracking-wider text-sm
+                    ${selectedSize === size
+                      ? 'border-slate-900 dark:border-slate-200 bg-slate-100 dark:bg-slate-800 scale-105'
+                      : 'border-slate-300 dark:border-slate-700 hover:border-slate-800 dark:hover:border-slate-400'
+                    }`}
                   onClick={() => handleSizeSelect(size)}
                 >
                   {size}
-                </button>
+                </div>
               ))}
             </div>
           </div>
@@ -122,21 +137,35 @@ const ProductQuickView: FC<ProductQuickViewProps> = ({ className = "", product }
         {/* Color selector */}
         {product.colors && product.colors.length > 0 && (
           <div className="mt-4">
-            <label className="text-sm font-medium text-slate-900 dark:text-slate-200">Màu sắc:</label>
-            <div className="flex flex-wrap gap-2 mt-2">
-              {product.colors.map((color, index) => (
-                <button
-                  key={index}
-                  className={`px-3 py-1 text-xs rounded-full border ${
-                    selectedColor === color
-                      ? 'bg-slate-900 text-white border-slate-900 dark:bg-slate-100 dark:text-slate-900 dark:border-slate-100'
-                      : 'border-slate-300 dark:border-slate-700 hover:border-slate-900 dark:hover:border-slate-300'
-                  }`}
-                  onClick={() => handleColorSelect(color)}
-                >
-                  {color}
-                </button>
-              ))}
+            <label className="text-sm font-medium text-slate-900 dark:text-slate-200">
+              Màu sắc:
+              <span className="ml-1 text-slate-500 dark:text-slate-400">
+                {selectedColor ?
+                  PRODUCT_COLORS.find(c => c.id === selectedColor)?.name || selectedColor
+                  : "Vui lòng chọn"}
+              </span>
+            </label>
+            <div className="grid grid-cols-4 sm:grid-cols-5 gap-2 mt-3">
+              {product.colors.map((colorId, index) => {
+                const colorObject = PRODUCT_COLORS.find(c => c.id === colorId);
+                return (
+                  <div
+                    key={index}
+                    className={`relative h-9 rounded-2xl border flex items-center justify-center 
+                      cursor-pointer select-none transition-all px-3
+                      ${selectedColor === colorId
+                        ? 'border-slate-900 dark:border-slate-200 bg-slate-100 dark:bg-slate-800 scale-105'
+                        : 'border-slate-300 dark:border-slate-700 hover:border-slate-800 dark:hover:border-slate-400'
+                      }`}
+                    onClick={() => handleColorSelect(colorId)}
+                  >
+                    <span
+                      className="w-4 h-4 rounded-full border border-slate-300 dark:border-slate-700"
+                      style={{ backgroundColor: colorObject?.hex || colorId }}
+                    />
+                  </div>
+                );
+              })}
             </div>
           </div>
         )}
@@ -163,17 +192,18 @@ const ProductQuickView: FC<ProductQuickViewProps> = ({ className = "", product }
         {/* ---------- 4 ACCORDION INFO ---------- */}
         <hr className="border-slate-200 dark:border-slate-700" />
         <AccordionInfo
+          defaultOpenIndex={-1} // Đóng tất cả accordion khi mở quick view
           data={[
             {
-              name: "Description",
+              name: "Mô tả thông tin",
               content: product?.description || "Không có mô tả",
             },
             {
-              name: "Material",
+              name: "Chất liệu",
               content: product?.material || "Không có thông tin chất liệu",
             },
             {
-              name: "Style",
+              name: "Phong cách",
               content: product?.style || "Không có thông tin phong cách",
             },
           ]}
