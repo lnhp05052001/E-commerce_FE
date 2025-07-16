@@ -10,7 +10,19 @@ export interface PaginationProps {
 const Pagination: FC<PaginationProps> = ({ pagination, onPageChange, className = "" }) => {
   const currentPage = pagination?.page ?? 1;
   const totalPages = pagination?.totalPages ?? 1;
-  const hasProducts = pagination?.totalItems ?? 0 > 0; // Giả sử API trả về totalItems
+  const hasProducts = (pagination?.totalItems ?? 0) > 0;
+
+  // Không hiển thị pagination nếu không có sản phẩm hoặc chỉ có 1 trang
+  if (!hasProducts || totalPages <= 1) {
+    return null;
+  }
+
+  const handlePageChange = (page: number) => {
+    // Kiểm tra page hợp lệ trước khi gọi callback
+    if (page >= 1 && page <= totalPages && page !== currentPage) {
+      onPageChange(page);
+    }
+  };
 
   const renderPageNumbers = () => {
     const maxPagesToShow = 3;
@@ -53,7 +65,7 @@ const Pagination: FC<PaginationProps> = ({ pagination, onPageChange, className =
         className={`w-11 h-11 flex items-center justify-center rounded-full border ${
           currentPage === 1 ? "cursor-not-allowed opacity-50" : "hover:bg-neutral-100"
         } ${twFocusClass()}`}
-        onClick={() => onPageChange(currentPage - 1)}
+        onClick={() => handlePageChange(currentPage - 1)}
         disabled={currentPage === 1}
       >
         «
@@ -73,7 +85,7 @@ const Pagination: FC<PaginationProps> = ({ pagination, onPageChange, className =
             className={`w-11 h-11 flex items-center justify-center rounded-full border ${
               page === currentPage ? "bg-primary-6000 text-white" : "hover:bg-neutral-100"
             } ${twFocusClass()}`}
-            onClick={() => onPageChange(page)}
+            onClick={() => handlePageChange(page)}
           >
             {page}
           </button>
@@ -82,12 +94,10 @@ const Pagination: FC<PaginationProps> = ({ pagination, onPageChange, className =
 
       <button
         className={`w-11 h-11 flex items-center justify-center rounded-full border ${
-          currentPage === totalPages || !hasProducts
-            ? "cursor-not-allowed opacity-50"
-            : "hover:bg-neutral-100"
+          currentPage === totalPages ? "cursor-not-allowed opacity-50" : "hover:bg-neutral-100"
         } ${twFocusClass()}`}
-        onClick={() => onPageChange(currentPage + 1)}
-        disabled={currentPage === totalPages || !hasProducts}
+        onClick={() => handlePageChange(currentPage + 1)}
+        disabled={currentPage === totalPages}
       >
         »
       </button>

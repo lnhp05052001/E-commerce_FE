@@ -11,16 +11,30 @@ export interface PageCollection2Props {
 }
 
 const PageCollection2: FC<PageCollection2Props> = ({ className = "" }) => {
-  const { products, error, pagination, filters } = useSelector((state: RootState) => state.products);
+  const { products, error, pagination, filters, loading } = useSelector((state: RootState) => state.products);
   const dispatch: AppDispatch = useDispatch()
 
-
+  // Component mount - load sản phẩm với filters mặc định một lần
   useEffect(() => {
+    console.log('PageCollection2 mounted, filters:', filters);
+    if (!products.length && !loading) {
+      dispatch(filterProducts(filters));
+    }
+  }, [dispatch]);
+
+  // Chỉ gọi API khi filters thay đổi (không phải lần đầu mount)
+  useEffect(() => {
+    console.log('Filters changed, applying filters:', filters);
     dispatch(filterProducts(filters));
-  }, [filters, dispatch]);
+  }, [filters.page, filters.categoryId, filters.brandId, filters.sortBy, filters.sortDirection, filters.minPrice, filters.maxPrice, dispatch]);
 
   const onPageChange = (page: number) => {
-    dispatch(setFilters({ ...filters, page }));
+    // Kiểm tra xem page có hợp lệ không
+    if (page >= 1 && pagination && page <= pagination.totalPages) {
+      const newFilters = { ...filters, page };
+      dispatch(setFilters(newFilters));
+      dispatch(filterProducts(newFilters));
+    }
   };
   return (
     <div className={`nc-PageCollection2 ${className}`} data-nc-id="PageCollection2">
@@ -41,18 +55,30 @@ const PageCollection2: FC<PageCollection2Props> = ({ className = "" }) => {
               <div className="flex-shrink-0 mb-10 lg:mb-0 lg:mx-4 border-t lg:border-t-0"></div>
 
               <div className="flex-1">
-                {error ? (
+                {loading ? (
+                  <div className="flex items-center justify-center min-h-[300px]">
+                    <div className="text-center">
+                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500 mx-auto"></div>
+                      <p className="mt-2 text-gray-500">Đang tải sản phẩm...</p>
+                    </div>
+                  </div>
+                ) : error ? (
                   <div className="flex items-center justify-center min-h-[300px]">
                     <span className="text-red-500">{error}</span>
                   </div>
                 ) : products?.length > 0 ? (
                   <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-x-8 gap-y-10">
                     {products.map((product, index) => (
-                      <ProductCard key={index} product={product} />
+                      <ProductCard key={`${product._id}-${index}`} product={product} />
                     ))}
                   </div>
                 ) : (
-                  <div className="flex items-center justify-center min-h-[300px]">No products available</div>
+                  <div className="flex items-center justify-center min-h-[300px]">
+                    <div className="text-center">
+                      <p className="text-gray-500">Không tìm thấy sản phẩm nào</p>
+                      <p className="text-sm text-gray-400 mt-1">Hãy thử thay đổi bộ lọc hoặc từ khóa tìm kiếm</p>
+                    </div>
+                  </div>
                 )}
 
                 <div className="flex justify-center items-center mt-10">

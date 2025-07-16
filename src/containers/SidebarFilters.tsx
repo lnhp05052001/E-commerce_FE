@@ -34,12 +34,21 @@ const SidebarFilters = () => {
   const [selectedBrand, setSelectedBrand] = useState<string | null>(
     filters.brandId?.toString() || null
   );
-  const [sortOrderStates, setSortOrderStates] = useState<string>(
-    filters.sortBy || ""
-  );
+  const [sortOrderStates, setSortOrderStates] = useState<string>(() => {
+    // Khởi tạo sortOrderStates đúng từ filters
+    if (filters.sortBy && filters.sortDirection) {
+      if (filters.sortBy === "name") {
+        return filters.sortDirection === "asc" ? "a-z" : "z-a";
+      } else if (filters.sortBy === "price") {
+        return filters.sortDirection === "asc" ? "Price-low-high" : "Price-high-low";
+      }
+    }
+    return "";
+  });
   const [categorySearch, setCategorySearch] = useState("");
   const [brandSearch, setBrandSearch] = useState("");
 
+  // Component mount - load categories và brands
   useEffect(() => {
     dispatch(
       fetchCategories({ page: 1, search: "", size: 100, isActive: true })
@@ -47,64 +56,106 @@ const SidebarFilters = () => {
     dispatch(fetchBrands({ page: 1, search: "", size: 100, isActive: true }));
   }, [dispatch]);
 
+  // Đồng bộ state với filters từ Redux store (chỉ khi filters thay đổi từ bên ngoài)
+  useEffect(() => {
+    console.log('Syncing state with filters:', filters);
+    
+    setRangePrices([
+      filters.minPrice || PRICE_RANGE[0],
+      filters.maxPrice || PRICE_RANGE[1],
+    ]);
+    setSelectedCategory(filters.categoryId?.toString() || null);
+    setSelectedBrand(filters.brandId?.toString() || null);
+    
+    // Xử lý sortOrderStates dựa trên sortBy và sortDirection
+    if (filters.sortBy && filters.sortDirection) {
+      if (filters.sortBy === "name") {
+        setSortOrderStates(filters.sortDirection === "asc" ? "a-z" : "z-a");
+      } else if (filters.sortBy === "price") {
+        setSortOrderStates(filters.sortDirection === "asc" ? "Price-low-high" : "Price-high-low");
+      }
+    } else {
+      setSortOrderStates("");
+    }
+  }, [filters.categoryId, filters.brandId, filters.sortBy, filters.sortDirection, filters.minPrice, filters.maxPrice]);
+
   const applyFilters = (
     categoryId: string | null = selectedCategory,
     brandId: string | null = selectedBrand,
-    sortId: string = sortOrderStates
+    sortId: string = sortOrderStates,
+    resetPage: boolean = true
   ) => {
     let sortBy: string | undefined = undefined;
     let sortDirection: "asc" | "desc" | undefined = undefined;
 
-    switch (sortId) {
-      case "a-z":
-        sortBy = "name";
-        sortDirection = "asc";
-        break;
-      case "z-a":
-        sortBy = "name";
-        sortDirection = "desc";
-        break;
-      case "Price-low-high":
-        sortBy = "price";
-        sortDirection = "asc";
-        break;
-      case "Price-high-low":
-        sortBy = "price";
-        sortDirection = "desc";
-        break;
-      default:
-        break;
-    }    const newFilters = {
-      page: 1, // Reset về trang 1 khi áp dụng bộ lọc mới
-      search: "",
+    // Chỉ set sortBy và sortDirection khi có sortId
+    if (sortId && sortId.trim() !== "") {
+      switch (sortId) {
+        case "a-z":
+          sortBy = "name";
+          sortDirection = "asc";
+          break;
+        case "z-a":
+          sortBy = "name";
+          sortDirection = "desc";
+          break;
+        case "Price-low-high":
+          sortBy = "price";
+          sortDirection = "asc";
+          break;
+        case "Price-high-low":
+          sortBy = "price";
+          sortDirection = "desc";
+          break;
+        default:
+          // Reset sort nếu sortId không hợp lệ
+          sortBy = undefined;
+          sortDirection = undefined;
+          break;
+      }
+    }
+
+    const newFilters = {
+      page: resetPage ? 1 : filters.page,
+      search: filters.search || "",
       size: 9,
       minPrice: rangePrices[0],
       maxPrice: rangePrices[1],
-      categoryId: categoryId || undefined,
-      brandId: brandId || undefined,
-      sortBy,
-      sortDirection,
+      categoryId: categoryId && categoryId.trim() !== "" ? categoryId : undefined,
+      brandId: brandId && brandId.trim() !== "" ? brandId : undefined,
+      sortBy: sortBy,
+      sortDirection: sortDirection,
     };
 
+    console.log('Applying filters with sort:', {
+      ...newFilters,
+      sortInfo: { originalSortId: sortId, computedSortBy: sortBy, computedSortDirection: sortDirection }
+    });
+    
     dispatch(setFilters(newFilters));
     dispatch(filterProducts(newFilters));
   };
 
   const debouncedApplyFilters = useCallback(
-    debounce(() => applyFilters(selectedCategory, selectedBrand, sortOrderStates), 300),
-    [rangePrices, selectedCategory, selectedBrand, sortOrderStates, dispatch]
+    debounce(() => {
+      console.log('Debounced apply filters called');
+      applyFilters(selectedCategory, selectedBrand, sortOrderStates, true);
+    }, 300),
+    [selectedCategory, selectedBrand, sortOrderStates, rangePrices]
   );
 
   const handleChangeCategory = (id: string) => {
     const newCategory = id === selectedCategory ? null : id;
     setSelectedCategory(newCategory);
-    applyFilters(newCategory, selectedBrand, sortOrderStates); // Truyền giá trị mới trực tiếp
+    // Giữ nguyên sort khi thay đổi category, reset về trang 1
+    applyFilters(newCategory, selectedBrand, sortOrderStates, true);
   };
 
   const handleChangeBrand = (id: string) => {
     const newBrand = id === selectedBrand ? null : id;
     setSelectedBrand(newBrand);
-    applyFilters(selectedCategory, newBrand, sortOrderStates); // Truyền giá trị mới trực tiếp
+    // Giữ nguyên sort khi thay đổi brand, reset về trang 1
+    applyFilters(selectedCategory, newBrand, sortOrderStates, true);
   };
 
   const handlePriceChange = (prices: number | number[]) => {
@@ -113,8 +164,10 @@ const SidebarFilters = () => {
   };
 
   const handleSortChange = (id: string) => {
+    console.log('Sort changed to:', id);
     setSortOrderStates(id);
-    applyFilters(selectedCategory, selectedBrand, id); // Truyền giá trị sort mới trực tiếp
+    // Giữ nguyên trang hiện tại khi sort (chỉ sort lại data hiện có)
+    applyFilters(selectedCategory, selectedBrand, id, false);
   };
 
   const filteredCategories = categories?.filter((item: Category) =>
@@ -126,6 +179,9 @@ const SidebarFilters = () => {
   );
 
   const handleClearFilters = () => {
+    console.log('Clearing all filters');
+    
+    // Reset tất cả state về giá trị mặc định
     setSelectedCategory(null);
     setSelectedBrand(null);
     setRangePrices([PRICE_RANGE[0], PRICE_RANGE[1]]);
@@ -133,14 +189,21 @@ const SidebarFilters = () => {
     setCategorySearch("");
     setBrandSearch("");
 
+    // Tạo filters mặc định - đảm bảo không có sort
     const defaultFilters = {
       page: 1,
       search: "",
       size: 9,
       minPrice: PRICE_RANGE[0],
       maxPrice: PRICE_RANGE[1],
+      categoryId: undefined,
+      brandId: undefined,
+      sortBy: undefined,
+      sortDirection: undefined,
     };
 
+    console.log('Applying default filters:', defaultFilters);
+    // Cập nhật state và gọi API
     dispatch(setFilters(defaultFilters));
     dispatch(filterProducts(defaultFilters));
   };

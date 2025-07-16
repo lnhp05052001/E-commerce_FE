@@ -33,6 +33,7 @@ interface ProductState {
   pagination: Pagination | null;
   reviews: Review[];
   filters: FilterParams;
+  lastFilterRequest: string; // Thêm field để track request cuối cùng
 }
 
 const initialState: ProductState = {
@@ -46,6 +47,7 @@ const initialState: ProductState = {
   loading: false,
   error: null,
   pagination: null,
+  lastFilterRequest: "",
   filters: {
     page: 1,
     search: "",
@@ -247,19 +249,55 @@ export const filterProducts = createAsyncThunk(
     sortBy?: string;
     sortDirection?: string;
   }) => {
-    const response = await api.get(
-      `/api/products?page=${page - 1}&search=${search}&size=${size}${
-        minPrice ? `&minPrice=${minPrice}` : ""
-      }${maxPrice ? `&maxPrice=${maxPrice}` : ""}${
-        categoryId ? `&categoryId=${categoryId}` : ""
-      }${brandId ? `&brandId=${brandId}` : ""}${
-        sortBy ? `&sortBy=${sortBy}` : ""
-      }${sortDirection ? `&sortDirection=${sortDirection}` : ""}&isActive=true`
-    );
+    // Tạo unique request ID để track
+    const requestId = Date.now().toString();
+    
+    // Tạo URL params một cách có tổ chức
+    const params = new URLSearchParams({
+      page: (page - 1).toString(),
+      search: search,
+      size: size.toString(),
+      isActive: 'true'
+    });
+
+    // Thêm các tham số optional
+    if (minPrice !== undefined && minPrice > 0) {
+      params.append('minPrice', minPrice.toString());
+    }
+    if (maxPrice !== undefined && maxPrice > 0) {
+      params.append('maxPrice', maxPrice.toString());
+    }
+    if (categoryId) {
+      params.append('categoryId', categoryId);
+    }
+    if (brandId) {
+      params.append('brandId', brandId);
+    }
+    if (sortBy) {
+      params.append('sortBy', sortBy);
+    }
+    if (sortDirection) {
+      params.append('sortDirection', sortDirection);
+    }
+
+    const url = `/api/products?${params.toString()}`;
+    
+    console.log('=== FilterProducts Debug ===');
+    console.log('Input params:', { page, search, size, minPrice, maxPrice, categoryId, brandId, sortBy, sortDirection });
+    console.log('URLSearchParams:', Object.fromEntries(params));
+    console.log('Final URL:', url);
+    console.log('============================');
+    
+    const response = await api.get(url);
+    
     if (response.data.status === "error") {
       throw new Error(response.data.message);
     }
-    return response.data as { data: Product[]; pagination: Pagination };
+    
+    return { 
+      ...response.data as { data: Product[]; pagination: Pagination },
+      requestId 
+    };
   }
 );
 
@@ -441,19 +479,22 @@ const productSlice = createSlice({
         state.loading = false;
         state.error = action.error.message || "Failed to fetch product detail";
       })
-      .addCase(filterProducts.pending, (state) => {
+      .addCase(filterProducts.pending, (state, action) => {
         state.loading = true;
         state.error = null;
+        // Track request ID để tránh race condition
+        state.lastFilterRequest = action.meta.requestId;
       })
       .addCase(
         filterProducts.fulfilled,
         (
           state,
-          action: PayloadAction<{ data: Product[]; pagination: Pagination }>
+          action: PayloadAction<{ data: Product[]; pagination: Pagination; requestId: string }>
         ) => {
           state.loading = false;
           state.products = action.payload.data;
           state.pagination = action.payload.pagination;
+          state.lastFilterRequest = action.payload.requestId;
         }
       )
       .addCase(filterProducts.rejected, (state, action) => {
