@@ -103,7 +103,7 @@ const SectionSliderCategories: FC<SectionSliderCategoriesProps> = ({
                 <CardCategory2
                   featuredImage={item.img}
                   name={item.name}
-                  desc={item.desc}
+                  desc={item.desc || ""}
                   bgClass={item.color}
                 />
               </li>

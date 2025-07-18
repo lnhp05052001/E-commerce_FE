@@ -1,7 +1,6 @@
 import { FC } from "react";
 import { Link } from "react-router";
 import { CATS_DISCOVER } from "../../components/DiscoverMoreSlider";
-import ButtonSecondary from "../../shared/Button/ButtonSecondary";
 import NcImage from "../../shared/NcImage/NcImage";
 
 export interface CardCategory3Props {
@@ -37,7 +36,7 @@ const CardCategory3: FC<CardCategory3Props> = ({
           <NcImage
             src={featuredImage}
             containerClassName="absolute inset-5 sm:inset-8"
-            className="absolute left-0 w-1/2 max-w-[260px] h-full object-contain drop-shadow-xl"
+            className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-1/2 max-w-[260px] h-auto object-contain drop-shadow-xl"
           />
         </div>
         <span className="opacity-0 group-hover:opacity-40 absolute inset-0 bg-black/10 transition-opacity"></span>
@@ -50,13 +49,9 @@ const CardCategory3: FC<CardCategory3Props> = ({
               </span>
             </div>
             <div className="mt-auto flex justify-end">
-              <ButtonSecondary
-                sizeClass="py-3 px-4 sm:py-3.5 sm:px-6"
-                fontSize="text-sm font-medium"
-                className="nc-shadow-lg"
-              >
-                Xem tất cả
-              </ButtonSecondary>
+              <span className="text-sm font-bold text-slate-600 hover:text-slate-900 transition-colors cursor-pointer">
+                Xem thêm
+              </span>
             </div>
           </div>
         </div>
