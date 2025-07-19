@@ -168,7 +168,7 @@ const ProductDetailPage2: FC<ProductDetailPage2Props> = ({
                 </p>
               </div>
               <Prices
-                price={(product?.salePrice || product?.price) * qualitySelected}
+                price={(product?.sale && product?.salePrice ? product.salePrice : product?.price || 0) * qualitySelected}
                 className="mt-0.5"
               />
             </div>

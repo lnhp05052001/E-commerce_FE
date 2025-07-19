@@ -1,7 +1,6 @@
 "use client"
 import { Transition } from "@headlessui/react";
 import { ArrowsPointingOutIcon } from "@heroicons/react/24/outline";
-import { StarIcon } from "@heroicons/react/24/solid";
 import React, { FC } from "react";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
@@ -97,7 +96,7 @@ const ProductCard: FC<ProductCardProps> = ({
                   <span className="mx-2 border-l border-slate-200 dark:border-slate-700 h-4"></span>
                 </p>
               </div>
-              <Prices price={product?.salePrice ?? product?.price} className="mt-0.5" />
+              <Prices price={product?.sale && product?.salePrice ? product.salePrice : product?.price || 0} className="mt-0.5" />
             </div>
           </div>
           <div className="flex flex-1 items-end justify-between text-sm">

@@ -5,7 +5,6 @@ import Preloader from "../components/Preloader";
 import AccountBilling from "../containers/AccountPage/AccountBilling";
 import AccountOrder from "../containers/AccountPage/AccountOrder";
 import AccountOrderDetail from "../containers/AccountPage/AccountOrderDetail";
-import AccountOrderReview from "../containers/AccountPage/AccountOrderReview";
 import AccountPage from "../containers/AccountPage/AccountPage";
 import AccountPass from "../containers/AccountPage/AccountPass";
 import AddBrand from "../containers/Admin/Brand/AddBrand";
@@ -56,7 +55,6 @@ export const privatePages: Page[] = [
   { path: "/account-change-password", component: AccountPass },
   { path: "/account-address", component: AccountBilling },
   { path: "/account-my-order", component: AccountOrder },
-  { path: "/account-my-order/review/:id", component: AccountOrderReview },
   { path: "/account-my-order/:id", component: AccountOrderDetail },
   { path: "/checkout", component: CheckoutPage },
 ]

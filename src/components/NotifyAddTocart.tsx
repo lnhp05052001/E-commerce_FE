@@ -2,7 +2,7 @@ import { Transition } from "@headlessui/react";
 import { FC } from "react";
 import { Link } from "react-router";
 import Prices from "../components/Prices";
-import { PRODUCTS } from "../data/data";
+import { Product } from "../types/product.types";
 
 interface Props {
   show: boolean;
@@ -11,6 +11,9 @@ interface Props {
   sizeSelected?: string;
   colorSelected?: string;
   qualitySelected: number;
+  product?: Product; // Thêm prop product để nhận thông tin sản phẩm thực tế
+  productName?: string; // Fallback cho tên sản phẩm
+  productPrice?: number; // Fallback cho giá sản phẩm
 }
 
 const NotifyAddTocart: FC<Props> = ({
@@ -20,8 +23,15 @@ const NotifyAddTocart: FC<Props> = ({
   qualitySelected,
   sizeSelected,
   colorSelected,
+  product,
+  productName,
+  productPrice,
 }) => {
-  const { name, price, variants } = PRODUCTS[0];
+  // Sử dụng thông tin từ product prop, fallback sang productName/productPrice, cuối cùng là giá trị mặc định
+  const displayName = product?.name || productName || "Sản phẩm";
+  const displayPrice = product?.sale && product?.salePrice 
+    ? product.salePrice 
+    : product?.price || productPrice || 0;
 
   const renderProductCartOnNotify = () => {
     return (
@@ -29,7 +39,7 @@ const NotifyAddTocart: FC<Props> = ({
         <div className="h-24 w-20 flex-shrink-0 overflow-hidden rounded-xl bg-slate-100">
           <img
             src={productImage}
-            alt={name}
+            alt={displayName}
             className="h-full w-full object-contain object-center"
           />
         </div>
@@ -37,7 +47,7 @@ const NotifyAddTocart: FC<Props> = ({
         <div className="ml-4 flex flex-1 flex-col">
           <div>
             <div className="flex justify-between ">
-              <div>                <h3 className="text-base font-medium ">{name}</h3>
+              <div>                <h3 className="text-base font-medium ">{displayName}</h3>
                 <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
                   {sizeSelected && (
                     <>
@@ -56,7 +66,7 @@ const NotifyAddTocart: FC<Props> = ({
                   )}
                 </p>
               </div>
-              <Prices price={price} className="mt-0.5" />
+              <Prices price={displayPrice} className="mt-0.5" />
             </div>
           </div>
           <div className="flex flex-1 items-end justify-between text-sm">
