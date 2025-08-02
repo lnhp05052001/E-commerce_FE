@@ -14,7 +14,7 @@ import { Product } from "../types";
 const PRODUCT_COLORS = [
   { id: "black", name: "Đen", hex: "#000000" },
   { id: "white", name: "Trắng", hex: "#FFFFFF" },
-  { id: "grey", name: "Xám", hex: "#808080" },
+  { id: "gray", name: "Xám", hex: "#808080" },
   { id: "navy", name: "Xanh navy", hex: "#000080" },
   { id: "olive", name: "Xanh rêu", hex: "#808000" },
   { id: "denim", name: "Xanh denim", hex: "#1560BD" },
