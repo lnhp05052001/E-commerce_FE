@@ -184,7 +184,8 @@ export const forgotPassword = createAsyncThunk(
   "auth/forgotPassword",
   async (email: string, { rejectWithValue }) => {
     try {
-      await api.post(`/api/user/send-otp`, { email });
+      const response = await api.post(`/api/user/forgot-password`, { email });
+      return response.data;
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>;
       return rejectWithValue(

@@ -30,6 +30,7 @@ import PageFaq from "../containers/PageFaq/PageFaq";
 import PageForgotPassword from "../containers/PageForgotPassword/PageForgotPassword";
 import PageHome from "../containers/PageHome/PageHome";
 import PageLogin from "../containers/PageLogin/PageLogin";
+import PageResetPassword from "../containers/PageResetPassword/PageResetPassword";
 import PageSignUp from "../containers/PageSignUp/PageSignUp";
 import PageVerifyOtp from "../containers/PageVerify/PageVerifyOtp";
 import CartPage from "../containers/ProductDetailPage/CartPage";
@@ -215,6 +216,12 @@ const MyRoutes = () => {
         <Route path="/forgot-password" element={<>
           <SiteHeader />
           <PageForgotPassword />
+          <ChatbotPage /> {/* Add Chatbot component here */}
+          <Footer />
+        </>} />
+        <Route path="/reset-password" element={<>
+          <SiteHeader />
+          <PageResetPassword />
           <ChatbotPage /> {/* Add Chatbot component here */}
           <Footer />
         </>} />

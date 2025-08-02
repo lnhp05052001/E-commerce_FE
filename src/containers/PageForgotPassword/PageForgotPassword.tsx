@@ -2,7 +2,7 @@ import { FC, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router";
+import { Link } from "react-router";
 import { forgotPassword } from "../../features/auth/authSlice";
 import ButtonPrimary from "../../shared/Button/ButtonPrimary";
 import Input from "../../shared/Input/Input";
@@ -15,17 +15,15 @@ export interface PageForgotPasswordProps {
 const PageForgotPassword: FC<PageForgotPasswordProps> = ({ className = "" }) => {
     const { register, handleSubmit, formState: { errors } } = useForm();
     const dispatch: AppDispatch = useDispatch();
-    const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const onSubmit = async (data: any) => {
         setLoading(true);
         try {
             await dispatch(forgotPassword(data?.email)).unwrap();
-            toast.success("Yêu cầu đặt lại mật khẩu đã được gửi");
-            navigate("/verify-otp?email=" + data?.email);
+            toast.success("Email đặt lại mật khẩu đã được gửi. Vui lòng kiểm tra hộp thư của bạn.");
         } catch (error :any) {
             console.error("Failed to send reset password request", error);
-            toast.error("Gửi yêu cầu thất bại");
+            toast.error(error || "Gửi yêu cầu thất bại");
         } finally {
             setLoading(false);
         }

@@ -103,11 +103,12 @@ const AccountPass: FC = () => {
       <CommonLayout>
         <div className="space-y-10 sm:space-y-12">
           {/* HEADING */}
-          <h2 className="text-2xl sm:text-3xl font-semibold">
+          <h2 className="text-2xl sm:text-3xl font-semibold text-center">
             Cập nhật mật khẩu
           </h2>
           
-          <form onSubmit={handleSubmit(onSubmit)} className="max-w-xl space-y-6">
+          <div className="flex justify-center">
+            <form onSubmit={handleSubmit(onSubmit)} className="max-w-xl w-full space-y-6">
             {/* Current Password */}
             <div>
               <Label>Mật khẩu hiện tại</Label>
@@ -232,7 +233,7 @@ const AccountPass: FC = () => {
               )}
             </div>
 
-            <div className="pt-2">
+            <div className="pt-2 flex justify-center">
               <ButtonPrimary 
                 type="submit" 
                 disabled={loading || isSubmitting}
@@ -242,6 +243,7 @@ const AccountPass: FC = () => {
               </ButtonPrimary>
             </div>
           </form>
+          </div>
         </div>
       </CommonLayout>
     </div>
